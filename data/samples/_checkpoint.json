@@ -1,0 +1,42 @@
+{
+  "full_done": [
+    "apache/spark",
+    "axios/axios",
+    "django/django",
+    "docker/compose",
+    "expressjs/express",
+    "facebook/react",
+    "kubernetes/kubernetes",
+    "microsoft/vscode",
+    "nodejs/node",
+    "pallets/flask",
+    "pandas-dev/pandas",
+    "psf/requests",
+    "scikit-learn/scikit-learn",
+    "sveltejs/svelte",
+    "tensorflow/tensorflow",
+    "tiangolo/fastapi",
+    "twbs/bootstrap",
+    "vuejs/vue"
+  ],
+  "incremental_done": [
+    "apache/spark",
+    "axios/axios",
+    "django/django",
+    "docker/compose",
+    "expressjs/express",
+    "facebook/react",
+    "kubernetes/kubernetes",
+    "microsoft/vscode",
+    "nodejs/node",
+    "pallets/flask",
+    "pandas-dev/pandas",
+    "psf/requests",
+    "scikit-learn/scikit-learn",
+    "sveltejs/svelte",
+    "tensorflow/tensorflow",
+    "tiangolo/fastapi",
+    "twbs/bootstrap",
+    "vuejs/vue"
+  ]
+}
