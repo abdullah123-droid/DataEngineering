@@ -168,21 +168,21 @@ def run_load(load_name, output_path, since_param, max_pages, checkpoint_key):
     if done_count < total_repos:
         print(f"NOT ALL REPOS DONE. Just re-run this script - it will pick up where it left off.")
 
-
 if __name__ == "__main__":
     if not TOKEN:
         print("ERROR: No token found. Check your .env file at the project root.")
         exit(1)
 
+    full_load_cutoff = (datetime.now(timezone.utc) - timedelta(days=548)).strftime("%Y-%m-%dT%H:%M:%SZ")  # ~18 months
     run_load(
         "FULL load", FULL_LOAD_PATH,
-        since_param=None, max_pages=3, checkpoint_key="full_done"
+        since_param=full_load_cutoff, max_pages=10, checkpoint_key="full_done"
     )
 
-    since_date = (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    since_date = "2026-09-25T15:03:05Z"
     run_load(
         "INCREMENTAL load", INCREMENTAL_LOAD_PATH,
-        since_param=since_date, max_pages=2, checkpoint_key="incremental_done"
+        since_param=since_date, max_pages=10, checkpoint_key="incremental_done"
     )
 
     print("\nAll done (or see messages above if some repos still need a re-run).")

@@ -21,7 +21,6 @@
   ],
   "incremental_done": [
     "apache/spark",
-    "axios/axios",
     "django/django",
     "docker/compose",
     "expressjs/express",
