@@ -1,3 +1,63 @@
+# Data Engineering Semester Project
+## Open-Source Repository Analytics Pipeline
+
+**Team Members:**
+- Abdullah Zahid — 24L-2597
+- Haseeb Nadeem — 23L-2646
+
+**Repository:** https://github.com/abdullah123-droid/DataEngineering
+
+---
+
+## Project Overview
+
+This project analyzes open-source software repository activity — commit frequency,
+issue lifecycle, and contributor engagement — across 18 popular, actively maintained
+GitHub repositories (e.g. facebook/react, apache/spark, kubernetes/kubernetes,
+pandas-dev/pandas). Data is ingested via the GitHub REST API and processed through
+a Medallion (Bronze/Silver/Gold) architecture using Apache Spark on Databricks.
+
+## Data Source
+
+GitHub REST API (`https://api.github.com`):
+- `GET /repos/{owner}/{repo}/commits`
+- `GET /repos/{owner}/{repo}/issues`
+
+**Full Load:** Historical pull bounded by an 18-month lookback window per repository
+(to keep large, high-velocity repos like kubernetes/kubernetes and tensorflow/tensorflow
+from disproportionately inflating data volume).
+
+**Incremental Load:** Pulled via the `since` parameter, capturing new and updated
+records after a given watermark timestamp.
+
+## Repository Structure
+
+```
+DataEngineeringProject/
+├── data/samples/              # Phase 1 sample files (full + incremental load, PII-hashed)
+├── ingestion/                 # Phase 1: GitHub API ingestion scripts
+│   ├── fetch_github_data.py
+│   ├── anonymize_samples.py
+│   └── trim_samples.py
+└── pipeline/                  # Phase 2: Bronze/Silver Spark pipeline (Databricks)
+    ├── Bronze/bronze_ingest.py
+    ├── Silver/silver_transform.py
+    └── Utils/
+        ├── schemas.py
+        └── audit_logger.py
+```
+
+## Security & Compliance
+
+All personal data (author/committer emails, names, GitHub usernames) is SHA-256
+hashed with a project-specific salt before being committed to this repository.
+No raw emails, usernames, or profile URLs are present in any sample file or
+pipeline table. See `data/samples/` for the hashed sample files.
+
+---
+
+# Phase 2: Engineering Pipeline
+
 ## Bronze Layer Data Model
 
 ### bronze_commits
@@ -78,4 +138,14 @@ Set widgets in `bronze_ingest`:
 Run the notebook, then run `silver_transform` to merge the new data in.
 
 ### Backfill (any historical file)
-Set `input_path` to any older/historical file's path instead of the current one — nothing is hardcoded to "today." Bronze is append-only, so re-running is safe. Silver uses MERGE INTO, so re-running it is always idempotent — verified by zero duplicate `commit_sha` / `(repo_name, issue_number)` pairs after multiple runs on the same data.
+Set `input_path` to any older/historical file's path instead of the current one —
+nothing is hardcoded to "today." Bronze is append-only, so re-running is safe.
+Silver uses MERGE INTO, so re-running it is always idempotent — verified by zero
+duplicate `commit_sha` / `(repo_name, issue_number)` pairs after multiple runs on
+the same data.
+
+## Team Contributions (Phase 2)
+| Component | Owner |
+|---|---|
+| Databricks environment setup, Bronze ingestion (`bronze_ingest.py`), schema definitions (`schemas.py`) | Abdullah Zahid (24L-2597) |
+| Silver transformation (`silver_transform.py`), MERGE INTO / idempotency logic, audit logging (`audit_logger.py`), README data dictionary | Haseeb Nadeem (23L-2646) |
